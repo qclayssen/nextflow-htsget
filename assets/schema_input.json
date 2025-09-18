@@ -1,0 +1,36 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://raw.githubusercontent.com/qclayssen/nextflow-htsget/main/assets/schema_input.json",
+    "title": "qclayssen/nextflow-htsget pipeline - params.samplesheet schema",
+    "description": "Schema for the file provided with params.samplesheet",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "Sample ID must be provided and cannot contain spaces",
+                "meta": ["id"]
+            },
+            "name": {
+                "type": "string",
+                "errorMessage": "Sample name must be provided",
+                "meta": ["name"]
+            },
+            "filetype": {
+                "type": "string",
+                "pattern": "^(bam|vcf|bed)$",
+                "errorMessage": "File type must be one of: bam, vcf, bed"
+            },
+            "uri": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https?://",
+                "errorMessage": "URI must be a valid HTTP/HTTPS URL",
+                "meta": ["uri"]
+            }
+        },
+        "required": ["id", "filetype", "uri"]
+    }
+}

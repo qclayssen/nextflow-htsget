@@ -1,82 +1,65 @@
+#!/usr/bin/env nextflow
 nextflow.enable.dsl=2
 
-params.outdir = params.outdir ?: 'results'
-params.samplesheet = params.samplesheet ?: 'samplesheet.csv'
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    qclayssen/nextflow-htsget
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    GitHub : https://github.com/qclayssen/nextflow-htsget
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
 
-// Helper that returns the rows from samplesheet.
-def sample_rows() {
-    Channel
-        .fromPath(params.samplesheet)
-        .splitCsv(header: true)
-        .map { row ->
-            def name = row.name?.trim() ?: row.id?.trim()
-            def uri = row.uri?.trim()
-            if (!uri) {
-                log.error "Row for '${name}' is missing a uri"
-                System.exit(1)
-            }
-            tuple(name, uri)
-        }
+// Print help message if needed
+if (params.help) {
+   log.info """
+   ========================================================================================
+                      q c l a y s s e n / n e x t f l o w - h t s g e t
+   ========================================================================================
+   Demonstration pipeline that downloads GA4GH HTSGET data via three methods.
+   
+   Usage:
+   nextflow run qclayssen/nextflow-htsget --samplesheet samplesheet.csv --outdir results -profile docker
+   
+   Mandatory arguments:
+     --samplesheet         Path to CSV samplesheet containing sample information
+     --outdir              Output directory for results
+   
+   Options:
+     -profile              Configuration profile (docker, singularity, etc.)
+     --help                Show this help message and exit
+     --version             Show version and exit
+   
+   ========================================================================================
+   """.stripIndent()
+   exit 0
 }
 
-process FETCH_WITH_CLI {
-    tag { sample }
-    publishDir "${params.outdir}/cli", mode: 'copy'
-
-    input:
-        tuple val(sample), val(uri)
-
-    output:
-        path "${sample}_cli.bam"
-
-    script:
-    """
-    htsget ${uri} -O ${sample}_cli.bam
-    """
+// Print version and exit
+if (params.version) {
+   log.info "qclayssen/nextflow-htsget version: ${workflow.manifest.version}"
+   exit 0
 }
 
-process FETCH_WITH_PYTHON {
-    tag { sample }
-    publishDir "${params.outdir}/python", mode: 'copy'
-
-    input:
-        tuple val(sample), val(uri)
-
-    output:
-        path "${sample}_python.bam"
-
-    script:
-    """
-    set -euo pipefail
-    python3 -c "
-    import htsget
-    url = '${uri}'
-    with open('${sample}_python.bam', 'wb') as output:
-        htsget.get(url, output)
-    "
-    """
+// Check mandatory parameters
+if (!params.samplesheet) {
+   log.error "Please provide a samplesheet with --samplesheet"
+   exit 1
 }
 
-process FETCH_WITH_CURL {
-    tag { sample }
-    publishDir "${params.outdir}/curl", mode: 'copy'
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    INCLUDE WORKFLOWS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
 
-    input:
-        tuple val(sample), val(uri)
+include { NEXTFLOWHTSGET } from './workflows/nextflowhtsget'
 
-    output:
-        path "${sample}_discovery.json"
-
-    script:
-    """
-    set -euo pipefail
-    curl -sS '${uri.replace('htsget://', 'https://')}' -o '${sample}_discovery.json'
-    """
-}
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    MAIN WORKFLOW
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
 
 workflow {
-    sample_ch = sample_rows()
-    FETCH_WITH_CLI(sample_ch)
-    FETCH_WITH_PYTHON(sample_ch)
-    FETCH_WITH_CURL(sample_ch)
+    NEXTFLOWHTSGET()
 }
