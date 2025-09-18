@@ -13,7 +13,28 @@
           "type": "string",
           "description": "Directory where the pipeline publishes result files.",
           "default": "results",
+          "format": "directory-path",
           "pattern": "^(?!\\s*$).+"
+        },
+        "monochrome_logs": {
+          "type": "boolean",
+          "description": "Disable ANSI colours in Nextflow log output.",
+          "default": false
+        },
+        "validate_params": {
+          "type": "boolean",
+          "description": "Enable JSON-schema validation for parameter inputs.",
+          "default": true
+        },
+        "config_profile_name": {
+          "type": "string",
+          "description": "Human-readable label describing the active configuration profile.",
+          "default": "standard"
+        },
+        "config_profile_description": {
+          "type": "string",
+          "description": "Extended description for the active configuration profile shown by launch helpers.",
+          "default": "Run locally using the bundled Docker image"
         }
       }
     },
@@ -25,7 +46,8 @@
           "type": "string",
           "description": "CSV file listing samples to fetch, with columns id/name and uri.",
           "default": "samplesheet.csv",
-          "pattern": "^(?!\\s*$).+"
+          "format": "file-path",
+          "pattern": "^.+\\.csv$"
         }
       }
     }
