@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://seqera.io/nextflow-htsget/schema",
+  "title": "nextflow-htsget pipeline parameters",
+  "description": "Schema describing parameters for the nextflow-htsget demonstration pipeline.",
+  "type": "object",
+  "definitions": {
+    "general": {
+      "title": "General options",
+      "type": "object",
+      "properties": {
+        "outdir": {
+          "type": "string",
+          "description": "Directory where the pipeline publishes result files.",
+          "default": "results",
+          "pattern": "^(?!\\s*$).+"
+        }
+      }
+    },
+    "input": {
+      "title": "Input",
+      "type": "object",
+      "properties": {
+        "samplesheet": {
+          "type": "string",
+          "description": "CSV file listing samples to fetch, with columns id/name and uri.",
+          "default": "samplesheet.csv",
+          "pattern": "^(?!\\s*$).+"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "$ref": "#/definitions/general"
+    },
+    {
+      "$ref": "#/definitions/input"
+    }
+  ]
+}
