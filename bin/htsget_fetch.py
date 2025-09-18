@@ -29,7 +29,7 @@ def main() -> int:
     args = parse_args()
     params = {}
     if args.fmt:
-        params["format"] = args.fmt
+        params["data_format"] = args.fmt
     if args.reference_name:
         params["reference_name"] = args.reference_name
     if args.start is not None:
