@@ -2,6 +2,7 @@ nextflow.enable.dsl=2
 
 params.outdir = params.outdir ?: 'results'
 params.samplesheet = params.samplesheet ?: 'samplesheet.csv'
+params.publish_dir_mode = params.publish_dir_mode ?: 'copy'
 
 // Helper that returns the rows from samplesheet.
 def sample_rows() {
@@ -21,7 +22,7 @@ def sample_rows() {
 
 process FETCH_WITH_CLI {
     tag { sample }
-    publishDir "${params.outdir}/cli", mode: 'copy'
+    publishDir "${params.outdir}/cli", mode: params.publish_dir_mode
 
     input:
         tuple val(sample), val(uri)
@@ -37,7 +38,7 @@ process FETCH_WITH_CLI {
 
 process FETCH_WITH_PYTHON {
     tag { sample }
-    publishDir "${params.outdir}/python", mode: 'copy'
+    publishDir "${params.outdir}/python", mode: params.publish_dir_mode
 
     input:
         tuple val(sample), val(uri)
@@ -59,7 +60,7 @@ process FETCH_WITH_PYTHON {
 
 process FETCH_WITH_CURL {
     tag { sample }
-    publishDir "${params.outdir}/curl", mode: 'copy'
+    publishDir "${params.outdir}/curl", mode: params.publish_dir_mode
 
     input:
         tuple val(sample), val(uri)
