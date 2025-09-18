@@ -4,4 +4,17 @@ results/
 reports/
 bin/__pycache__/
 *.pyc
+*.pyo
+__pycache__/
 .DS_Store
+.vscode/
+.idea/
+*.log
+testing*
+tests/test_data/
+test_data/
+*.tmp
+*.temp
+nf-test-*
+nextflow
+nxf-tmp.*
