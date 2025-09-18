@@ -57,6 +57,27 @@
           "description": "Extended description for the active configuration profile shown by launch helpers.",
           "default": "Run locally using the bundled Docker image"
         },
+        "max_cpus": {
+          "type": "integer",
+          "description": "Hard limit for CPU requests across all processes.",
+          "default": 4,
+          "minimum": 1,
+          "hidden": true
+        },
+        "max_memory": {
+          "type": "string",
+          "description": "Hard limit for memory requests; format like '16.GB'.",
+          "default": "16.GB",
+          "pattern": "^(?!\\s*$).+",
+          "hidden": true
+        },
+        "max_time": {
+          "type": "string",
+          "description": "Hard limit for runtime; format like '8.h'.",
+          "default": "8.h",
+          "pattern": "^(?!\\s*$).+",
+          "hidden": true
+        },
         "help": {
           "type": "boolean",
           "description": "Display a short usage help message and exit.",
