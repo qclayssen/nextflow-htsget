@@ -84,6 +84,12 @@ def prepare_input() {
                 }
             }
 
+            // Validate that reference_name is required when start or end is specified
+            if ((startPos != null || endPos != null) && !referenceName) {
+                log.error "Row for '${sampleLabel}' specifies start/end positions but is missing reference_name. Reference name is required when using genomic ranges."
+                System.exit(1)
+            }
+
             // Create metadata with attached file type information
             def meta = [
                 id             : sampleLabel,
