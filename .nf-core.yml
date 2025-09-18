@@ -1,0 +1,11 @@
+nf_core_version: 3.3.1
+repository_type: pipeline
+template:
+  author: Quentin Clayssen
+  description: Demonstration pipeline that downloads GA4GH HTSGET data via three methods
+  force: false
+  is_nfcore: false
+  name: nextflow-htsget
+  org: qclayssen
+  outdir: .
+  version: 1.0.0
