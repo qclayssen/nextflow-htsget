@@ -3,26 +3,19 @@ nextflow.enable.dsl=2
 params.outdir = params.outdir ?: 'results'
 params.samplesheet = params.samplesheet ?: 'samplesheet.csv'
 
-// Helper that returns the rows for a given method.
-def method_rows(String method) {
+// Helper that returns the rows from samplesheet.
+def sample_rows() {
     Channel
         .fromPath(params.samplesheet)
         .splitCsv(header: true)
-        .filter { row ->
-            row.filetype?.trim()?.toLowerCase() == method
-        }
         .map { row ->
-            def name = row.name?.trim() ?: row.id?.trim() ?: method
+            def name = row.name?.trim() ?: row.id?.trim()
             def uri = row.uri?.trim()
             if (!uri) {
-                log.error "Row for '${name}' (${method}) is missing a uri"
+                log.error "Row for '${name}' is missing a uri"
                 System.exit(1)
             }
-            def filename = row.filename?.trim()
-            if (!filename) {
-                filename = "${name}_${method}"
-            }
-            tuple(name, uri, filename)
+            tuple(name, uri)
         }
 }
 
@@ -31,15 +24,14 @@ process FETCH_WITH_CLI {
     publishDir "${params.outdir}/cli", mode: 'copy'
 
     input:
-        tuple val(sample), val(uri), val(filename)
+        tuple val(sample), val(uri)
 
     output:
-        path filename
+        path "${sample}_cli.bam"
 
     script:
     """
-    set -euo pipefail
-    htsget get '${uri}' --output '${filename}'
+    htsget ${uri} -O ${sample}_cli.bam
     """
 }
 
@@ -48,15 +40,20 @@ process FETCH_WITH_PYTHON {
     publishDir "${params.outdir}/python", mode: 'copy'
 
     input:
-        tuple val(sample), val(uri), val(filename)
+        tuple val(sample), val(uri)
 
     output:
-        path filename
+        path "${sample}_python.bam"
 
     script:
     """
     set -euo pipefail
-    bin/fetch_htsget.py '${uri}' '${filename}'
+    python3 -c "
+    import htsget
+    url = '${uri}'
+    with open('${sample}_python.bam', 'wb') as output:
+        htsget.get(url, output)
+    "
     """
 }
 
@@ -65,20 +62,21 @@ process FETCH_WITH_CURL {
     publishDir "${params.outdir}/curl", mode: 'copy'
 
     input:
-        tuple val(sample), val(uri), val(filename)
+        tuple val(sample), val(uri)
 
     output:
-        path filename
+        path "${sample}_discovery.json"
 
     script:
     """
     set -euo pipefail
-    curl -sS '${uri}' -o '${filename}'
+    curl -sS '${uri.replace('htsget://', 'https://')}' -o '${sample}_discovery.json'
     """
 }
 
 workflow {
-    FETCH_WITH_CLI(method_rows('cli'))
-    FETCH_WITH_PYTHON(method_rows('python'))
-    FETCH_WITH_CURL(method_rows('curl'))
+    sample_ch = sample_rows()
+    FETCH_WITH_CLI(sample_ch)
+    FETCH_WITH_PYTHON(sample_ch)
+    FETCH_WITH_CURL(sample_ch)
 }

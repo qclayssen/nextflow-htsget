@@ -1,4 +1,2 @@
-id,name,filetype,uri,filename
-ga4gh_demo,NA12878,cli,https://htsget.ga4gh-demo.org/reads/htsnexus_test_NA12878,reads_cli.bam
-ga4gh_demo,NA12878,python,https://htsget.ga4gh-demo.org/variants/spec-v4.3,variants_python.vcf
-ga4gh_demo,NA12878,curl,https://htsget.ga4gh-demo.org/reads/htsnexus_test_NA12878,reads_discovery.json
+id,name,filetype,uri
+ga4gh_demo,NA12878,bam, https://htsget.ga4gh-demo.org/reads/htsnexus_test_NA12878
