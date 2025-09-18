@@ -13,11 +13,12 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python packages
+# Install Python packages
 RUN pip install --no-cache-dir \
-        htsget==0.1.0a2 \
+        htsget \
         requests \
         multiqc
 
-# Copy and setup fetch_htsget.py script
-COPY bin/fetch_htsget.py /bin/fetch_htsget.py
-RUN chmod +x /bin/fetch_htsget.py
+# Copy and setup htsget_fetch.py script
+COPY bin/htsget_fetch.py /usr/local/bin/htsget_fetch.py
+RUN chmod +x /usr/local/bin/htsget_fetch.py
