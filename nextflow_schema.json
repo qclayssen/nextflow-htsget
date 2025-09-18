@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema",
   "$id": "https://raw.githubusercontent.com/quentinclayssen/nextflow-htsget/main/nextflow_schema.json",
   "title": "nextflow-htsget pipeline parameters",
   "description": "Schema describing parameters for the nextflow-htsget demonstration pipeline.",
