@@ -16,6 +16,13 @@
           "format": "directory-path",
           "pattern": "^(?!\\s*$).+"
         },
+        "workdir": {
+          "type": "string",
+          "description": "Location for Nextflow intermediate work files.",
+          "default": "work",
+          "format": "directory-path",
+          "pattern": "^(?!\\s*$).+"
+        },
         "monochrome_logs": {
           "type": "boolean",
           "description": "Disable ANSI colours in Nextflow log output.",
