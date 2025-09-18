@@ -142,30 +142,13 @@ process FETCH_FILE_CLI {
         tuple val(meta), path("${meta.id}.cli.${meta.extension}")
 
     script:
-    def args = ['htsget']
     if (meta.format)          args << "--format=${meta.format}"
     if (meta.reference_name)  args << "--reference-name=${meta.reference_name}"
     if (meta.start != null)   args << "--start=${meta.start}"
     if (meta.end != null)     args << "--end=${meta.end}"
-    args << "--output=${meta.id}.cli.${meta.extension}"
-    args << "'${uri}'"
+
     """
-    set -euo pipefail
-    
-    # Check if htsget CLI tool is available
-    if ! command -v htsget &> /dev/null; then
-        echo "Error: htsget CLI tool not found. Please install it first." >&2
-        exit 1
-    fi
-    
-    # Execute the htsget command
-    ${args.join(' ')}
-    
-    # Validate output file was created
-    if [[ ! -f "${meta.id}.cli.${meta.extension}" ]]; then
-        echo "Error: Output file '${meta.id}.cli.${meta.extension}' was not created" >&2
-        exit 1
-    fi
+    htsget "'${uri}'" "--output=${meta.id}.cli.${meta.extension}" ${args.join(' ')}
     """
 }
 
@@ -185,14 +168,7 @@ process RUN_FASTQC {
 
     script:
     """
-    set -euo pipefail
-    
-    # Check if fastqc is available
-    if ! command -v fastqc &> /dev/null; then
-        echo "Error: FastQC not found. Please install it first." >&2
-        exit 1
-    fi
-    
+
     fastqc --quiet --outdir . ${reads}
     """
 }
@@ -213,14 +189,7 @@ process RUN_SAMTOOLS_STATS {
 
     script:
     """
-    set -euo pipefail
-    
-    # Check if samtools is available
-    if ! command -v samtools &> /dev/null; then
-        echo "Error: Samtools not found. Please install it first." >&2
-        exit 1
-    fi
-    
+
     samtools stats ${bam} > ${meta.id}.samtools_stats.txt
     samtools flagstat ${bam} > ${meta.id}.samtools_flagstat.txt
     """
@@ -241,14 +210,7 @@ process RUN_BCFTOOLS_STATS {
 
     script:
     """
-    set -euo pipefail
-    
-    # Check if bcftools is available
-    if ! command -v bcftools &> /dev/null; then
-        echo "Error: BCFtools not found. Please install it first." >&2
-        exit 1
-    fi
-    
+
     bcftools stats ${vcf} > ${meta.id}.bcftools_stats.txt
     """
 }
@@ -269,21 +231,9 @@ process MULTIQC {
 
     script:
     """
-    set -euo pipefail
-    
-    # Check if multiqc is available
-    if ! command -v multiqc &> /dev/null; then
-        echo "Error: MultiQC not found. Please install it first." >&2
-        exit 1
-    fi
-    
-    # Run MultiQC
+
     multiqc . -o . --force
-    
-    # Validate output was created
-    if [[ ! -f "multiqc_report.html" ]]; then
-        echo "Warning: MultiQC report was not generated" >&2
-    fi
+
     """
 }
 
