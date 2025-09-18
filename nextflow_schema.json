@@ -16,6 +16,27 @@
           "format": "directory-path",
           "pattern": "^(?!\\s*$).+"
         },
+        "workdir": {
+          "type": "string",
+          "description": "Location for Nextflow intermediate work files.",
+          "default": "work",
+          "format": "directory-path",
+          "pattern": "^(?!\\s*$).+"
+        },
+        "publish_dir_mode": {
+          "type": "string",
+          "description": "Method used to publish files from work directory to the results directory.",
+          "default": "copy",
+          "enum": [
+            "symlink",
+            "rellink",
+            "link",
+            "copy",
+            "copyNoFollow",
+            "move"
+          ],
+          "hidden": true
+        },
         "monochrome_logs": {
           "type": "boolean",
           "description": "Disable ANSI colours in Nextflow log output.",
@@ -35,6 +56,35 @@
           "type": "string",
           "description": "Extended description for the active configuration profile shown by launch helpers.",
           "default": "Run locally using the bundled Docker image"
+        },
+        "help": {
+          "type": "boolean",
+          "description": "Display a short usage help message and exit.",
+          "default": false,
+          "hidden": true
+        },
+        "help_full": {
+          "type": "boolean",
+          "description": "Display the full parameter help output and exit.",
+          "default": false,
+          "hidden": true
+        },
+        "show_hidden": {
+          "type": "boolean",
+          "description": "Reveal hidden parameters in help output.",
+          "default": false,
+          "hidden": true
+        },
+        "version": {
+          "type": "boolean",
+          "description": "Display pipeline version and exit.",
+          "default": false,
+          "hidden": true
+        },
+        "trace_report_suffix": {
+          "type": "string",
+          "description": "Suffix appended to pipeline info filenames (defaults to current datetime when not supplied).",
+          "hidden": true
         }
       }
     },
