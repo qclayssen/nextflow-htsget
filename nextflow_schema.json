@@ -1,6 +1,6 @@
 {
-  "$schema": "https://json-schema.org/draft-07/schema#",
-  "$id": "https://seqera.io/nextflow-htsget/schema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/quentinclayssen/nextflow-htsget/main/nextflow_schema.json",
   "title": "nextflow-htsget pipeline parameters",
   "description": "Schema describing parameters for the nextflow-htsget demonstration pipeline.",
   "type": "object",
@@ -12,16 +12,12 @@
         "outdir": {
           "type": "string",
           "description": "Directory where the pipeline publishes result files.",
-          "default": "results",
-          "format": "directory-path",
-          "pattern": "^(?!\\s*$).+"
+          "default": "results"
         },
         "workdir": {
           "type": "string",
           "description": "Location for Nextflow intermediate work files.",
-          "default": "work",
-          "format": "directory-path",
-          "pattern": "^(?!\\s*$).+"
+          "default": "work"
         },
         "publish_dir_mode": {
           "type": "string",
@@ -117,7 +113,6 @@
           "type": "string",
           "description": "CSV file listing samples to fetch, with columns id/name and uri.",
           "default": "samplesheet.csv",
-          "format": "file-path",
           "pattern": "^.+\\.csv$"
         }
       }
