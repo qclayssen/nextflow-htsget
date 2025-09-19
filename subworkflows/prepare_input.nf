@@ -9,7 +9,7 @@ workflow PREPARE_INPUT {
         vcf  : [extension: 'vcf',  format: 'VCF']
     ]
 
-    Channel
+    ch_meta_uri = Channel
         .fromPath(params.samplesheet)
         .splitCsv(header: true)
         .map { row ->
@@ -87,4 +87,7 @@ workflow PREPARE_INPUT {
 
             return tuple(meta, meta.uri)
         }
+
+    emit:
+    ch_meta_uri
 }

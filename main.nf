@@ -5,7 +5,7 @@ params.outdir = params.outdir ?: 'results'
 params.samplesheet = params.samplesheet ?: 'samplesheet.csv'
 params.publish_dir_mode = params.publish_dir_mode ?: 'copy'
 
-include { PREPARE_INPUT } from '../subworkflows/prepare_input'
+include { PREPARE_INPUT } from './subworkflows/prepare_input'
 
 process FETCH_FILE_PYTHON {
     tag { meta.id }
@@ -29,7 +29,7 @@ process FETCH_FILE_PYTHON {
 
     """
 
-    python htsget_fetch.py ${args.join(' ')}
+    python /usr/local/bin/htsget_fetch.py ${args.join(' ')}
 
     """
 }
