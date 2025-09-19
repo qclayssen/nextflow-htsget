@@ -1,35 +1,39 @@
 # nextflow-htsget
 
-Minimal Docker-based Nextflow workflow that fetches GA4GH HTSGET data three ways:
+Minimal Nextflow workflow that fetches GA4GH HTSGET reads with the bundled Python client and runs a handful of QC utilities, all inside `docker.io/qclayssen/nextflow-htsget:latest`.
 
-| Method | Tool | What it does |
-| --- | --- | --- |
-| `cli` | `htsget get` | Streams the BAM demo sample with the official client. |
-| `python` | `bin/fetch_htsget.py` | Resolves the discovery document and writes the first data block. |
-| `curl` | `curl` | Saves the raw discovery JSON returned by the endpoint. |
-
-## Samplesheet
-
-Inputs come from `samplesheet.csv` (override with `--samplesheet`). Each row
-needs:
-
-- `id`: identifier used to derive defaults
-- `name`: optional label for logging (defaults to `id`)
-- `filetype`: one of `cli`, `python`, or `curl`
-- `uri`: the HTSGET discovery endpoint to fetch
-- `filename`: file name to emit for that method
-
-The included example points at the GA4GH demo service.
-
-## Run
-
-All processes run inside `docker.io/qclayssen/htsget-demo:latest`. Build and
-push that image if you change the code.
-
-Execute locally or on Seqera Platform:
+## Quick start
 
 ```bash
-nextflow run main.nf --outdir results
+nextflow run . --outdir results
 ```
 
-Outputs land in `<outdir>/cli`, `<outdir>/python`, and `<outdir>/curl`.
+Inputs default to `samplesheet.csv`; override with `--samplesheet your-sheet.csv`.
+
+## Samplesheet format
+
+Provide a CSV with a header row. Each entry must include:
+- `id` (or `name`): used for file naming and reporting.
+- `filetype`: one of `bam`, `fastq`, or `vcf`; determines downstream QC steps.
+- `uri`: the HTSGET endpoint to request.
+
+Optional columns:
+- `reference_name`, `start`, `end` to request a genomic slice (requires `reference_name` when `start`/`end` are set).
+
+Example (`samplesheet.csv` ships with these rows):
+
+```csv
+id,name,filetype,uri,reference_name,start,end
+ga4gh_demo,NA12878,bam,https://htsget.ga4gh-demo.org/reads/htsnexus_test_NA12878,,,
+ga4gh_demo_small,NA12878,bam,https://htsget.ga4gh-demo.org/reads/htsnexus_test_NA12878,1,100,2000
+```
+
+QC outputs are published under `<outdir>/qc` alongside the downloaded data in `<outdir>/downloads`.
+
+## Seqera reports
+
+`tower.yml` exposes the MultiQC summary, FastQC HTML reports, samtools/bcftools stats, and the built-in Nextflow execution reports in Seqera Platform. Launch with `-with-tower` to view them on the run page.
+
+## Container image
+
+Rebuild the image after local changes with `scripts/build_docker.sh` (uses `docker buildx` for `linux/amd64`).
