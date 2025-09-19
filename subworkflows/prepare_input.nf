@@ -9,9 +9,16 @@ workflow PREPARE_INPUT {
         vcf  : [extension: 'vcf',  format: 'VCF']
     ]
 
+    def sheetPath = params.samplesheet?.toString()
+    def delimiter = sheetPath?.toLowerCase()?.endsWith('.tsv') ? "\t" : ','
+
     ch_meta_uri = Channel
         .fromPath(params.samplesheet)
-        .splitCsv(header: true)
+        .ifEmpty {
+            log.error "Samplesheet '${params.samplesheet}' could not be found"
+            System.exit(1)
+        }
+        .splitCsv(header: true, sep: delimiter)
         .map { row ->
             def sampleId = row.id?.trim()
             def sampleName = row.name?.trim()

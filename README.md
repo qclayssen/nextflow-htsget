@@ -8,11 +8,11 @@ Minimal Nextflow workflow that fetches GA4GH HTSGET reads with the bundled Pytho
 nextflow run . --outdir results
 ```
 
-Inputs default to `samplesheet.csv`; override with `--samplesheet your-sheet.csv`.
+Inputs default to `samplesheet.csv`; override with `--samplesheet your-sheet.csv` or select a Seqera dataset (registered as `text/csv`).
 
 ## Samplesheet format
 
-Provide a CSV with a header row. Each entry must include:
+Provide a CSV or TSV with a header row. Each entry must include:
 - `id` (or `name`): used for file naming and reporting.
 - `filetype`: one of `bam`, `fastq`, or `vcf`; determines downstream QC steps.
 - `uri`: the HTSGET endpoint to request.
@@ -20,7 +20,7 @@ Provide a CSV with a header row. Each entry must include:
 Optional columns:
 - `reference_name`, `start`, `end` to request a genomic slice (requires `reference_name` when `start`/`end` are set).
 
-Example (`samplesheet.csv` ships with these rows):
+Example (`samplesheet.csv` ships with these rows; TSV uses the same columns with tab separators):
 
 ```csv
 id,name,filetype,uri,reference_name,start,end
