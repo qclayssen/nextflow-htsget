@@ -15,12 +15,35 @@
           "description": "Samplesheet of records to fetch (CSV/TSV) — select a Seqera dataset or provide a path.",
           "default": "samplesheet.csv",
           "format": "file-path",
-          "exists": true,
           "schema": "assets/schema_samplesheet.json",
           "mimetype": "text/csv",
           "pattern": "^\\S+\\.(csv|tsv)$",
           "help_text": "Pick a workspace dataset (text/csv) or path to a CSV/TSV containing id,name,filetype,uri columns.",
           "errorMessage": "Supply a CSV/TSV path without spaces ending in .csv or .tsv, or choose a matching dataset."
+        },
+        "htsget_urls": {
+          "type": "array",
+          "description": "Optional list of HTSGET endpoint URLs to fetch in addition to (or instead of) the samplesheet records.",
+          "default": [],
+          "items": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https?://.+$",
+            "errorMessage": "Provide valid http(s) HTSGET URLs."
+          },
+          "help_text": "Add one or more HTSGET URLs for quick demos when a dedicated samplesheet is unavailable."
+        },
+        "htsget_filetype": {
+          "type": "string",
+          "description": "Filetype to assign to the direct HTSGET URLs (controls downstream QC steps).",
+          "default": "bam",
+          "enum": [
+            "bam",
+            "fastq",
+            "vcf"
+          ],
+          "help_text": "Choose the filetype for manual HTSGET URLs so the appropriate QC steps run.",
+          "errorMessage": "Select one of bam, fastq, or vcf for manual URL inputs."
         },
         "outdir": {
           "type": "string",
