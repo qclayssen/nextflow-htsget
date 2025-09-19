@@ -17,33 +17,9 @@
           "format": "file-path",
           "schema": "assets/schema_samplesheet.json",
           "mimetype": "text/csv",
-          "pattern": "^\\S+\\.(csv|tsv)$",
-          "help_text": "Pick a workspace dataset (text/csv) or path to a CSV/TSV containing id,name,filetype,uri columns.",
-          "errorMessage": "Supply a CSV/TSV path without spaces ending in .csv or .tsv, or choose a matching dataset."
-        },
-        "htsget_urls": {
-          "type": "array",
-          "description": "Optional list of HTSGET endpoint URLs to fetch in addition to (or instead of) the samplesheet records.",
-          "default": [],
-          "items": {
-            "type": "string",
-            "format": "uri",
-            "pattern": "^https?://.+$",
-            "errorMessage": "Provide valid http(s) HTSGET URLs."
-          },
-          "help_text": "Add one or more HTSGET URLs for quick demos when a dedicated samplesheet is unavailable."
-        },
-        "htsget_filetype": {
-          "type": "string",
-          "description": "Filetype to assign to the direct HTSGET URLs (controls downstream QC steps).",
-          "default": "bam",
-          "enum": [
-            "bam",
-            "fastq",
-            "vcf"
-          ],
-          "help_text": "Choose the filetype for manual HTSGET URLs so the appropriate QC steps run.",
-          "errorMessage": "Select one of bam, fastq, or vcf for manual URL inputs."
+          "pattern": "^(?:|\\S+\\.(csv|tsv))$",
+          "help_text": "Pick a workspace dataset (text/csv) or path to a CSV/TSV containing id,name,filetype,uri columns. Leave blank when using manual URLs.",
+          "errorMessage": "Supply a CSV/TSV path without spaces ending in .csv or .tsv, or leave the field blank when using manual URLs."
         },
         "outdir": {
           "type": "string",
@@ -68,6 +44,37 @@
             "move"
           ],
           "hidden": true
+        }
+      }
+    },
+    "manual_url_options": {
+      "title": "Manual HTSGET inputs",
+      "description": "Configure direct HTSGET URLs for quick demos.",
+      "type": "object",
+      "properties": {
+        "htsget_urls": {
+          "type": "array",
+          "description": "Optional list of HTSGET endpoint URLs to fetch in addition to (or instead of) the samplesheet records.",
+          "default": [],
+          "items": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https?://.+$",
+            "errorMessage": "Provide valid http(s) HTSGET URLs."
+          },
+          "help_text": "Add one or more HTSGET URLs for quick demos when a dedicated samplesheet is unavailable (clear the samplesheet field when using this option)."
+        },
+        "htsget_filetype": {
+          "type": "string",
+          "description": "Filetype to assign to the direct HTSGET URLs (controls downstream QC steps).",
+          "default": "bam",
+          "enum": [
+            "bam",
+            "fastq",
+            "vcf"
+          ],
+          "help_text": "Choose the filetype for manual HTSGET URLs so the appropriate QC steps run.",
+          "errorMessage": "Select one of bam, fastq, or vcf for manual URL inputs."
         }
       }
     },
@@ -117,7 +124,7 @@
         "config_profile_description": {
           "type": "string",
           "description": "Extended description for the active configuration profile shown by launch helpers.",
-          "default": "Run locally using the bundled Docker image"
+          "default": "Run locally with the bundled demo Docker image"
         },
         "trace_report_suffix": {
           "type": "string",
@@ -168,6 +175,9 @@
       "$ref": "#/definitions/input_output_options"
     },
     {
+      "$ref": "#/definitions/manual_url_options"
+    },
+    {
       "$ref": "#/definitions/runtime_options"
     },
     {
@@ -175,6 +185,54 @@
     },
     {
       "$ref": "#/definitions/utility_flags"
+    },
+    {
+      "not": {
+        "type": "object",
+        "required": [
+          "samplesheet",
+          "htsget_urls"
+        ],
+        "properties": {
+          "samplesheet": {
+            "type": "string",
+            "minLength": 1
+          },
+          "htsget_urls": {
+            "type": "array",
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "samplesheet": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^\\S+\\.(csv|tsv)$"
+            }
+          },
+          "required": [
+            "samplesheet"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "htsget_urls": {
+              "type": "array",
+              "minItems": 1
+            }
+          },
+          "required": [
+            "htsget_urls"
+          ]
+        }
+      ]
     }
   ]
 }

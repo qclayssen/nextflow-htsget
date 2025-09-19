@@ -8,7 +8,7 @@ Minimal Nextflow workflow that fetches GA4GH HTSGET reads with the bundled Pytho
 nextflow run . --outdir results
 ```
 
-Inputs default to `samplesheet.csv`; override with `--samplesheet your-sheet.csv` or select a Seqera dataset (registered as `text/csv`).
+Inputs default to `samplesheet.csv`; override with `--samplesheet your-sheet.csv` or select a Seqera dataset (registered as `text/csv`). Use either a samplesheet or manual URLs, but not both.
 
 ## Samplesheet format
 
@@ -29,6 +29,17 @@ ga4gh_demo_small,NA12878,bam,https://htsget.ga4gh-demo.org/reads/htsnexus_test_N
 ```
 
 QC outputs are published under `<outdir>/qc` alongside the downloaded data in `<outdir>/downloads`.
+
+## Direct URL input (demo)
+
+For quick demos you can skip preparing a sheet and supply one or more HTSGET discovery URLs directly (clear the samplesheet field in the UI, or pass `--samplesheet ''` on the CLI):
+
+```bash
+nextflow run . --htsget_urls https://htsget.ga4gh-demo.org/reads/htsnexus_test_NA12878 \
+                 --htsget_urls https://htsget.example.org/reads/sample2
+```
+
+Entries are treated as BAM fetches by default. Use `--htsget_filetype fastq` (or `vcf`) if the manual URLs should trigger a different QC path.
 
 ## Seqera reports
 

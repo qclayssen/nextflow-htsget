@@ -68,8 +68,11 @@ workflow PREPARE_INPUT {
     def manualChannel = manualTuples ? Channel.of(*manualTuples) : Channel.empty()
 
     def sheetPathStr = params.samplesheet?.toString()?.trim()
+    if (sheetPathStr == '') {
+        sheetPathStr = null
+    }
     def sheetPath    = sheetPathStr ? file(sheetPathStr, checkIfExists: false) : null
-    def sheetExists  = sheetPath?.exists() && manualUrls.isEmpty()  // Only process samplesheet if no manual URLs
+    def sheetExists  = sheetPath?.exists()
 
     def rowToTuple = { row ->
         def sampleId    = row.id?.trim()
@@ -147,6 +150,11 @@ workflow PREPARE_INPUT {
         tuple(meta, meta.uri)
     }
 
+    if (sheetExists && !manualTuples.isEmpty()) {
+        log.error "Both samplesheet '${sheetPathStr}' and manual HTSGET URLs were provided. Choose only one input method."
+        System.exit(1)
+    }
+
     def sheetChannel = Channel.empty()
     if (sheetExists) {
         def delimiter = sheetPathStr.toLowerCase().endsWith('.tsv') ? "\t" : ','
@@ -161,7 +169,7 @@ workflow PREPARE_INPUT {
         System.exit(1)
     }
 
-    ch_meta_uri = sheetChannel.mix(manualChannel)
+    ch_meta_uri = sheetExists ? sheetChannel : manualChannel
 
     emit:
     ch_meta_uri
