@@ -1,0 +1,19 @@
+reports:
+  "results/qc/multiqc/multiqc_report.html":
+    display: "MultiQC summary"
+  "results/qc/fastqc/*_fastqc.html":
+    display: "FastQC report"
+  "results/qc/samtools/*samtools_stats.txt":
+    display: "Samtools stats"
+  "results/qc/samtools/*samtools_flagstat.txt":
+    display: "Samtools flagstat"
+  "results/qc/bcftools/*bcftools_stats.txt":
+    display: "BCFtools stats"
+  "results/pipeline_info/execution_report_*.html":
+    display: "Nextflow execution report"
+  "results/pipeline_info/execution_timeline_*.html":
+    display: "Nextflow execution timeline"
+  "results/pipeline_info/execution_trace_*.txt":
+    display: "Nextflow trace file"
+  "results/pipeline_info/pipeline_dag_*.html":
+    display: "Nextflow workflow diagram"
