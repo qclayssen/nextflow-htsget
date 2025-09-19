@@ -5,10 +5,23 @@
   "description": "Schema describing parameters for the nextflow-htsget demonstration pipeline.",
   "type": "object",
   "definitions": {
-    "general": {
-      "title": "General options",
+    "input_output_options": {
+      "title": "Input/output options",
+      "description": "Define where the pipeline reads inputs and publishes results.",
       "type": "object",
       "properties": {
+        "samplesheet": {
+          "type": "string",
+          "description": "Samplesheet of records to fetch (CSV/TSV) — select a Seqera dataset or provide a path.",
+          "default": "samplesheet.csv",
+          "format": "file-path",
+          "exists": true,
+          "schema": "assets/schema_samplesheet.json",
+          "mimetype": "text/csv",
+          "pattern": "^\\S+\\.(csv|tsv)$",
+          "help_text": "Pick a workspace dataset (text/csv) or path to a CSV/TSV containing id,name,filetype,uri columns.",
+          "errorMessage": "Supply a CSV/TSV path without spaces ending in .csv or .tsv, or choose a matching dataset."
+        },
         "outdir": {
           "type": "string",
           "description": "Directory where the pipeline publishes result files.",
@@ -32,27 +45,14 @@
             "move"
           ],
           "hidden": true
-        },
-        "monochrome_logs": {
-          "type": "boolean",
-          "description": "Disable ANSI colours in Nextflow log output.",
-          "default": false
-        },
-        "validate_params": {
-          "type": "boolean",
-          "description": "Enable JSON-schema validation for parameter inputs.",
-          "default": true
-        },
-        "config_profile_name": {
-          "type": "string",
-          "description": "Human-readable label describing the active configuration profile.",
-          "default": "standard"
-        },
-        "config_profile_description": {
-          "type": "string",
-          "description": "Extended description for the active configuration profile shown by launch helpers.",
-          "default": "Run locally using the bundled Docker image"
-        },
+        }
+      }
+    },
+    "runtime_options": {
+      "title": "Execution settings",
+      "description": "Resource limits and logging tweaks for local runs.",
+      "type": "object",
+      "properties": {
         "max_cpus": {
           "type": "integer",
           "description": "Hard limit for CPU requests across all processes.",
@@ -73,6 +73,45 @@
           "default": "8.h",
           "pattern": "^(?!\\s*$).+",
           "hidden": true
+        },
+        "monochrome_logs": {
+          "type": "boolean",
+          "description": "Disable ANSI colours in Nextflow log output.",
+          "default": false
+        }
+      }
+    },
+    "metadata_options": {
+      "title": "Pipeline metadata",
+      "description": "Labels surfaced in launch helpers and reports.",
+      "type": "object",
+      "properties": {
+        "config_profile_name": {
+          "type": "string",
+          "description": "Human-readable label describing the active configuration profile.",
+          "default": "standard"
+        },
+        "config_profile_description": {
+          "type": "string",
+          "description": "Extended description for the active configuration profile shown by launch helpers.",
+          "default": "Run locally using the bundled Docker image"
+        },
+        "trace_report_suffix": {
+          "type": "string",
+          "description": "Suffix appended to pipeline info filenames (defaults to current datetime when not supplied).",
+          "hidden": true
+        }
+      }
+    },
+    "utility_flags": {
+      "title": "Utility flags",
+      "description": "Helper switches mostly used for automation or debugging.",
+      "type": "object",
+      "properties": {
+        "validate_params": {
+          "type": "boolean",
+          "description": "Enable JSON-schema validation for parameter inputs.",
+          "default": true
         },
         "help": {
           "type": "boolean",
@@ -97,35 +136,22 @@
           "description": "Display pipeline version and exit.",
           "default": false,
           "hidden": true
-        },
-        "trace_report_suffix": {
-          "type": "string",
-          "description": "Suffix appended to pipeline info filenames (defaults to current datetime when not supplied).",
-          "hidden": true
-        }
-      }
-    },
-    "input": {
-      "title": "Input",
-      "type": "object",
-      "properties": {
-        "samplesheet": {
-          "type": "string",
-          "description": "CSV/TSV samplesheet listing records to fetch; supports Seqera datasets.",
-          "default": "samplesheet.csv",
-          "format": "file-path",
-          "mimetype": "text/csv",
-          "pattern": "(?i)^.+\\.(csv|tsv)$"
         }
       }
     }
   },
   "allOf": [
     {
-      "$ref": "#/definitions/general"
+      "$ref": "#/definitions/input_output_options"
     },
     {
-      "$ref": "#/definitions/input"
+      "$ref": "#/definitions/runtime_options"
+    },
+    {
+      "$ref": "#/definitions/metadata_options"
+    },
+    {
+      "$ref": "#/definitions/utility_flags"
     }
   ]
 }
