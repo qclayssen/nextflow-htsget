@@ -58,6 +58,7 @@
           "default": [],
           "items": {
             "type": "string",
+            "title": "HTSGET URL",
             "format": "uri",
             "pattern": "^https?://.+$",
             "errorMessage": "Provide valid http(s) HTSGET URLs."
@@ -87,49 +88,24 @@
           "type": "integer",
           "description": "Hard limit for CPU requests across all processes.",
           "default": 4,
-          "minimum": 1,
           "hidden": true
         },
         "max_memory": {
           "type": "string",
           "description": "Hard limit for memory requests; format like '16.GB'.",
           "default": "16.GB",
-          "pattern": "^(?!\\s*$).+",
           "hidden": true
         },
         "max_time": {
           "type": "string",
           "description": "Hard limit for runtime; format like '8.h'.",
           "default": "8.h",
-          "pattern": "^(?!\\s*$).+",
           "hidden": true
         },
         "monochrome_logs": {
           "type": "boolean",
           "description": "Disable ANSI colours in Nextflow log output.",
           "default": false
-        }
-      }
-    },
-    "metadata_options": {
-      "title": "Pipeline metadata",
-      "description": "Labels surfaced in launch helpers and reports.",
-      "type": "object",
-      "properties": {
-        "config_profile_name": {
-          "type": "string",
-          "description": "Human-readable label describing the active configuration profile.",
-          "default": "standard"
-        },
-        "config_profile_description": {
-          "type": "string",
-          "description": "Extended description for the active configuration profile shown by launch helpers.",
-          "default": "Run locally with the bundled demo Docker image"
-        },
-        "trace_report_suffix": {
-          "type": "string",
-          "description": "Suffix appended to pipeline info filenames (defaults to current datetime when not supplied).",
-          "hidden": true
         }
       }
     },
@@ -176,12 +152,6 @@
     },
     {
       "$ref": "#/definitions/manual_url_options"
-    },
-    {
-      "$ref": "#/definitions/runtime_options"
-    },
-    {
-      "$ref": "#/definitions/metadata_options"
     },
     {
       "$ref": "#/definitions/utility_flags"
