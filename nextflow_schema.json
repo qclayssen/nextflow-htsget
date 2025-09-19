@@ -111,9 +111,11 @@
       "properties": {
         "samplesheet": {
           "type": "string",
-          "description": "CSV file listing samples to fetch, with columns id/name and uri.",
+          "description": "CSV/TSV samplesheet listing records to fetch; supports Seqera datasets.",
           "default": "samplesheet.csv",
-          "pattern": "^.+\\.csv$"
+          "format": "file-path",
+          "mimetype": "text/csv",
+          "pattern": "(?i)^.+\\.(csv|tsv)$"
         }
       }
     }
