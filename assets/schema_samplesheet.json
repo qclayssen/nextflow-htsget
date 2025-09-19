@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/quentinclayssen/nextflow-htsget/main/assets/schema_samplesheet.json",
+  "title": "nextflow-htsget samplesheet",
+  "description": "Row schema for the samplesheet parameter (Seqera dataset compatible).",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "minLength": 1,
+        "description": "Unique identifier for the sample entry",
+        "meta": ["id"]
+      },
+      "name": {
+        "type": "string",
+        "description": "Optional label for logging",
+        "meta": ["name"]
+      },
+      "filetype": {
+        "type": "string",
+        "enum": ["bam", "fastq", "vcf"],
+        "description": "Download format to request (bam, fastq, or vcf)",
+        "errorMessage": "filetype must be one of bam, fastq, or vcf"
+      },
+      "uri": {
+        "type": "string",
+        "minLength": 1,
+        "description": "HTSGET endpoint to fetch"
+      },
+      "reference_name": {
+        "type": "string",
+        "description": "Reference contig for ranged requests"
+      },
+      "start": {
+        "type": ["integer", "string", "null"],
+        "minimum": 0,
+        "pattern": "^$|^\\d+$",
+        "description": "Start position (0-based inclusive)"
+      },
+      "end": {
+        "type": ["integer", "string", "null"],
+        "minimum": 0,
+        "pattern": "^$|^\\d+$",
+        "description": "End position (0-based exclusive)"
+      }
+    },
+    "required": ["uri"],
+    "additionalProperties": true
+  }
+}
