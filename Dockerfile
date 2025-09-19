@@ -1,22 +1,19 @@
 FROM python:3.12-slim
 
-# Install system dependencies
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+        bash \
         curl \
         procps \
-        wget \
-        fastqc \
-        samtools \
-        bcftools \
-        default-jre \
+    fastqc \
+    samtools \
+    bcftools \
+    openjdk-21-jre-headless \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python packages
-# Install Python packages
 RUN pip install --no-cache-dir \
-        htsget \
         requests \
+        htsget \
         multiqc
 
 # Copy and setup htsget_fetch.py script

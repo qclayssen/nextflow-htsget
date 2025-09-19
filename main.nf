@@ -26,9 +26,11 @@ process FETCH_FILE_PYTHON {
     if (meta.reference_name)  args << "--reference-name '${meta.reference_name}'"
     if (meta.start != null)   args << "--start ${meta.start}"
     if (meta.end != null)     args << "--end ${meta.end}"
+
     """
-    set -euo pipefail
-    htsget_fetch.py ${args.join(' ')}
+
+    python htsget_fetch.py ${args.join(' ')}
+
     """
 }
 
@@ -49,7 +51,9 @@ process FETCH_FILE_CLI {
     if (meta.end != null)     args << "--end=${meta.end}"
 
     """
+
     htsget "'${uri}'" "--output=${meta.id}.cli.${meta.extension}" ${args.join(' ')}
+
     """
 }
 
@@ -71,6 +75,7 @@ process RUN_FASTQC {
     """
 
     fastqc --quiet --outdir . ${reads}
+
     """
 }
 
@@ -93,6 +98,7 @@ process RUN_SAMTOOLS_STATS {
 
     samtools stats ${bam} > ${meta.id}.samtools_stats.txt
     samtools flagstat ${bam} > ${meta.id}.samtools_flagstat.txt
+
     """
 }
 
