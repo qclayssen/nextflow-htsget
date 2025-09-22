@@ -148,7 +148,7 @@ process MULTIQC {
 }
 
 workflow {
-    meta_uri_ch = PREPARE_INPUT(params.htsget_url, params.htsget_urls, params.htsget_filetype)
+    meta_uri_ch = PREPARE_INPUT(params.htsget_urls, params.htsget_filetype)
 
     fetched_python_ch = FETCH_FILE_PYTHON(meta_uri_ch)
     // CLI fetching is available but not used in the main workflow
