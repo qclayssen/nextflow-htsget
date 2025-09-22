@@ -1,2 +1,4 @@
-id,name,filetype,uri
-ga4gh_demo,NA12878,bam,https://htsget.ga4gh-demo.org/reads/htsnexus_test_NA12878
+id,name,filetype,uri,reference_name,start,end
+ga4gh_demo,NA12878,bam,https://htsget.ga4gh-demo.org/reads/htsnexus_test_NA12878,,,,
+ga4gh_demo_small,NA12878,bam,https://htsget.ga4gh-demo.org/reads/htsnexus_test_NA12878,1,100,2000
+ga4gh_variants,NA12878_variants,vcf,https://htsget.ga4gh-demo.org/variants/spec-v4.3,,,

@@ -52,6 +52,14 @@
       "description": "Configure direct HTSGET URLs for quick demos.",
       "type": "object",
       "properties": {
+        "htsget_url": {
+          "type": "string",
+          "description": "Single HTSGET endpoint URL to fetch when skipping the samplesheet.",
+          "default": "",
+          "pattern": "^$|https?://.+$",
+          "help_text": "Enter one HTSGET URL for a quick demo. Separate multiple URLs with commas if needed.",
+          "errorMessage": "Leave the field empty or provide a valid http(s) URL."
+        },
         "htsget_urls": {
           "type": "array",
           "description": "Optional list of HTSGET endpoint URLs to fetch in addition to (or instead of) the samplesheet records.",
@@ -63,7 +71,8 @@
             "pattern": "^https?://.+$",
             "errorMessage": "Provide valid http(s) HTSGET URLs."
           },
-          "help_text": "Add one or more HTSGET URLs for quick demos when a dedicated samplesheet is unavailable (clear the samplesheet field when using this option)."
+          "help_text": "Advanced option: supply multiple HTSGET URLs (via CLI or JSON input).",
+          "hidden": true
         },
         "htsget_filetype": {
           "type": "string",
@@ -78,72 +87,6 @@
           "errorMessage": "Select one of bam, fastq, or vcf for manual URL inputs."
         }
       }
-    },
-    "runtime_options": {
-      "title": "Execution settings",
-      "description": "Resource limits and logging tweaks for local runs.",
-      "type": "object",
-      "properties": {
-        "max_cpus": {
-          "type": "integer",
-          "description": "Hard limit for CPU requests across all processes.",
-          "default": 4,
-          "hidden": true
-        },
-        "max_memory": {
-          "type": "string",
-          "description": "Hard limit for memory requests; format like '16.GB'.",
-          "default": "16.GB",
-          "hidden": true
-        },
-        "max_time": {
-          "type": "string",
-          "description": "Hard limit for runtime; format like '8.h'.",
-          "default": "8.h",
-          "hidden": true
-        },
-        "monochrome_logs": {
-          "type": "boolean",
-          "description": "Disable ANSI colours in Nextflow log output.",
-          "default": false
-        }
-      }
-    },
-    "utility_flags": {
-      "title": "Utility flags",
-      "description": "Helper switches mostly used for automation or debugging.",
-      "type": "object",
-      "properties": {
-        "validate_params": {
-          "type": "boolean",
-          "description": "Enable JSON-schema validation for parameter inputs.",
-          "default": true
-        },
-        "help": {
-          "type": "boolean",
-          "description": "Display a short usage help message and exit.",
-          "default": false,
-          "hidden": true
-        },
-        "help_full": {
-          "type": "boolean",
-          "description": "Display the full parameter help output and exit.",
-          "default": false,
-          "hidden": true
-        },
-        "show_hidden": {
-          "type": "boolean",
-          "description": "Reveal hidden parameters in help output.",
-          "default": false,
-          "hidden": true
-        },
-        "version": {
-          "type": "boolean",
-          "description": "Display pipeline version and exit.",
-          "default": false,
-          "hidden": true
-        }
-      }
     }
   },
   "allOf": [
@@ -152,9 +95,6 @@
     },
     {
       "$ref": "#/definitions/manual_url_options"
-    },
-    {
-      "$ref": "#/definitions/utility_flags"
     },
     {
       "not": {
@@ -171,6 +111,25 @@
           "htsget_urls": {
             "type": "array",
             "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "not": {
+        "type": "object",
+        "required": [
+          "samplesheet",
+          "htsget_url"
+        ],
+        "properties": {
+          "samplesheet": {
+            "type": "string",
+            "minLength": 1
+          },
+          "htsget_url": {
+            "type": "string",
+            "minLength": 1
           }
         }
       }
@@ -200,6 +159,18 @@
           },
           "required": [
             "htsget_urls"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "htsget_url": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "htsget_url"
           ]
         }
       ]
