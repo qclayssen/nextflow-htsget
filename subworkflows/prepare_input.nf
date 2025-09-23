@@ -1,9 +1,5 @@
 // Subworkflow to prepare input channel from samplesheet or direct URL list
 workflow PREPARE_INPUT {
-    take:
-    htsget_urls
-    htsget_filetype
-
     main:
     params.outdir        = params.outdir ?: 'results'
     params.samplesheet   = params.samplesheet ?: 'samplesheet.csv'
@@ -14,19 +10,37 @@ workflow PREPARE_INPUT {
         vcf  : [extension: 'vcf',  format: 'VCF']
     ]
 
-    // Normalise manual URL inputs to a list of strings
-    def rawUrlInput = htsget_urls
-    if (!(rawUrlInput instanceof Collection)) {
-        // Handle comma-separated strings
-        if (rawUrlInput instanceof String && rawUrlInput.contains(',')) {
-            rawUrlInput = rawUrlInput.split(',').collect { it.trim() }
-        } else {
-            rawUrlInput = rawUrlInput ? [rawUrlInput] : []
+    // Normalise manual URL inputs from single-field UI or CLI list flags
+    def manualUrls = []
+    def addUrls = { value ->
+        if (!value) {
+            return
         }
+        if (value instanceof Collection) {
+            value.each { addUrls(it) }
+            return
+        }
+
+        def text = value.toString()
+        if (!text) {
+            return
+        }
+
+        text
+            .split(/[\n,]/)
+            .collect { it?.trim() }
+            .findAll { it }
+            .each { manualUrls << it }
     }
-    def manualUrls = rawUrlInput
+
+    addUrls(params.htsget_urls)
+    addUrls(params.htsget_url)
+
+    manualUrls = manualUrls
         .collect { it?.toString()?.trim() }
         .findAll { it }
+
+    def configuredFiletype = params.htsget_filetype?.toString()?.trim()
 
     def manualTuples = []
     manualUrls.eachWithIndex { url, idx ->
@@ -35,7 +49,7 @@ workflow PREPARE_INPUT {
         def safeLabel     = baseComponent?.replaceAll(/[^A-Za-z0-9._\-]/, '_')?.take(40)
         def sampleLabel   = safeLabel ?: "url_${suffix}"
 
-        def detectedFiletype = htsget_filetype?.toString()?.toLowerCase()
+        def detectedFiletype = configuredFiletype?.toLowerCase()
         if (!detectedFiletype) {
             // Auto-detect filetype from URL path when not specified
             if (url.contains('/variants/')) {
@@ -47,7 +61,8 @@ workflow PREPARE_INPUT {
             }
         }
         if (!FILETYPE_METADATA.containsKey(detectedFiletype)) {
-            log.error "Invalid htsget_filetype '${htsget_filetype}'. Supported: ${FILETYPE_METADATA.keySet().join(', ')}"
+            def invalidValue = configuredFiletype ?: params.htsget_filetype
+            log.error "Invalid htsget_filetype '${invalidValue}'. Supported: ${FILETYPE_METADATA.keySet().join(', ')}"
             System.exit(1)
         }
 
@@ -165,7 +180,7 @@ workflow PREPARE_INPUT {
     }
 
     if (!sheetExists && manualTuples.isEmpty()) {
-        log.error "No records to process: provide a samplesheet or one or more --htsget_urls entries."
+        log.error "No records to process: provide a samplesheet or at least one manual HTSGET URL."
         System.exit(1)
     }
 

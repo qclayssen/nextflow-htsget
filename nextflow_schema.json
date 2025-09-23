@@ -52,14 +52,6 @@
       "description": "Configure direct HTSGET URLs for quick demos.",
       "type": "object",
       "properties": {
-        "htsget_url": {
-          "type": "string",
-          "description": "Single HTSGET endpoint URL to fetch when skipping the samplesheet.",
-          "default": "",
-          "pattern": "^$|https?://.+$",
-          "help_text": "Enter one HTSGET URL for a quick demo. Separate multiple URLs with commas if needed.",
-          "errorMessage": "Leave the field empty or provide a valid http(s) URL."
-        },
         "htsget_urls": {
           "type": "array",
           "description": "Optional list of HTSGET endpoint URLs to fetch in addition to (or instead of) the samplesheet records.",
@@ -116,25 +108,6 @@
       }
     },
     {
-      "not": {
-        "type": "object",
-        "required": [
-          "samplesheet",
-          "htsget_url"
-        ],
-        "properties": {
-          "samplesheet": {
-            "type": "string",
-            "minLength": 1
-          },
-          "htsget_url": {
-            "type": "string",
-            "minLength": 1
-          }
-        }
-      }
-    },
-    {
       "anyOf": [
         {
           "type": "object",
@@ -159,18 +132,6 @@
           },
           "required": [
             "htsget_urls"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "htsget_url": {
-              "type": "string",
-              "minLength": 1
-            }
-          },
-          "required": [
-            "htsget_url"
           ]
         }
       ]

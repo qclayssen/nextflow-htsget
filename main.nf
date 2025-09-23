@@ -2,9 +2,7 @@ nextflow.enable.dsl=2
 
 // Default parameters
 params.outdir           = params.outdir ?: 'results'
-params.samplesheet      = params.samplesheet ?: 'samplesheet.csv'
 params.publish_dir_mode = params.publish_dir_mode ?: 'copy'
-params.htsget_url       = params.htsget_url ?: ''
 params.htsget_urls      = params.htsget_urls ?: []
 params.htsget_filetype  = params.htsget_filetype ?: 'bam'
 
@@ -148,7 +146,7 @@ process MULTIQC {
 }
 
 workflow {
-    meta_uri_ch = PREPARE_INPUT(params.htsget_urls, params.htsget_filetype)
+    meta_uri_ch = PREPARE_INPUT()
 
     fetched_python_ch = FETCH_FILE_PYTHON(meta_uri_ch)
     // CLI fetching is available but not used in the main workflow
