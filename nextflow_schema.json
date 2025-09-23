@@ -53,17 +53,12 @@
       "type": "object",
       "properties": {
         "htsget_urls": {
-          "type": "array",
+          "type": "string",
           "description": "Optional list of HTSGET endpoint URLs to fetch in addition to (or instead of) the samplesheet records.",
-          "default": [],
-          "items": {
-            "type": "string",
-            "title": "HTSGET URL",
-            "format": "uri",
-            "pattern": "^https?://.+$",
-            "errorMessage": "Provide valid http(s) HTSGET URLs."
-          },
-          "help_text": "Advanced option: supply multiple HTSGET URLs (via CLI or JSON input)."
+          "default": "",
+          "pattern": "^$|.*\\S.*",
+          "help_text": "Enter one or more HTSGET URLs separated by commas or newlines. Leave blank to rely on the samplesheet.",
+          "placeholder": "https://…/reads/sample1, https://…/reads/sample2"
         },
         "htsget_filetype": {
           "type": "string",
@@ -100,8 +95,9 @@
             "minLength": 1
           },
           "htsget_urls": {
-            "type": "array",
-            "minItems": 1
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
           }
         }
       }
@@ -125,8 +121,9 @@
           "type": "object",
           "properties": {
             "htsget_urls": {
-              "type": "array",
-              "minItems": 1
+              "type": "string",
+              "minLength": 1,
+              "pattern": ".*\\S.*"
             }
           },
           "required": [

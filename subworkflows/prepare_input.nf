@@ -29,20 +29,8 @@ workflow PREPARE_INPUT {
         vcf  : [extension: 'vcf',  format: 'VCF']
     ]
 
-    // Normalise manual URL inputs from single-field UI or CLI list flags
-    def manualUrls = []
-    if (params.htsget_urls) {
-        def urls = params.htsget_urls
-        if (urls instanceof String) {
-            // Split by comma or newline
-            urls = urls.split(/[\n,]/).collect { it?.trim() }.findAll { it }
-        } else if (urls instanceof Collection) {
-            urls = urls.collect { it?.toString()?.trim() }.findAll { it }
-        } else {
-            urls = [urls.toString().trim()].findAll { it }
-        }
-        manualUrls.addAll(urls)
-    }
+    // Normalise manual URL inputs from form or CLI overrides
+    def manualUrls = normaliseUrlInput(params.htsget_urls)
 
     def configuredFiletype = params.htsget_filetype?.toString()?.trim()
 
