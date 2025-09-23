@@ -1,3 +1,22 @@
+// Normalise any mix of collections or comma/newline separated strings into a flat list of URLs
+def normaliseUrlInput(value) {
+    if (!value) {
+        return []
+    }
+
+    def candidates = value instanceof Collection ? value : [value]
+
+    candidates
+        .collect { it?.toString() }
+        .findAll { it }
+        .collectMany { item ->
+            item
+                .split(/[\n,]/)
+                .collect { it?.trim() }
+                .findAll { it }
+        }
+}
+
 // Subworkflow to prepare input channel from samplesheet or direct URL list
 workflow PREPARE_INPUT {
     main:
@@ -12,42 +31,37 @@ workflow PREPARE_INPUT {
 
     // Normalise manual URL inputs from single-field UI or CLI list flags
     def manualUrls = []
-    def addUrls = { value ->
-        if (!value) {
-            return
+    if (params.htsget_urls) {
+        def urls = params.htsget_urls
+        if (urls instanceof String) {
+            // Split by comma or newline
+            urls = urls.split(/[\n,]/).collect { it?.trim() }.findAll { it }
+        } else if (urls instanceof Collection) {
+            urls = urls.collect { it?.toString()?.trim() }.findAll { it }
+        } else {
+            urls = [urls.toString().trim()].findAll { it }
         }
-        if (value instanceof Collection) {
-            value.each { addUrls(it) }
-            return
-        }
-
-        def text = value.toString()
-        if (!text) {
-            return
-        }
-
-        text
-            .split(/[\n,]/)
-            .collect { it?.trim() }
-            .findAll { it }
-            .each { manualUrls << it }
+        manualUrls.addAll(urls)
     }
-
-    addUrls(params.htsget_urls)
-    addUrls(params.htsget_url)
-
-    manualUrls = manualUrls
-        .collect { it?.toString()?.trim() }
-        .findAll { it }
 
     def configuredFiletype = params.htsget_filetype?.toString()?.trim()
 
     def manualTuples = []
+    def usedLabels = [:] // Track used labels to ensure uniqueness
     manualUrls.eachWithIndex { url, idx ->
         def suffix        = idx + 1
         def baseComponent = url.tokenize('/')?.last()?.split('\\?')[0]
         def safeLabel     = baseComponent?.replaceAll(/[^A-Za-z0-9._\-]/, '_')?.take(40)
         def sampleLabel   = safeLabel ?: "url_${suffix}"
+
+        // Ensure unique sample labels
+        if (usedLabels.containsKey(sampleLabel)) {
+            def counter = usedLabels[sampleLabel] + 1
+            usedLabels[sampleLabel] = counter
+            sampleLabel = "${sampleLabel}_${counter}"
+        } else {
+            usedLabels[sampleLabel] = 1
+        }
 
         def detectedFiletype = configuredFiletype?.toLowerCase()
         if (!detectedFiletype) {
@@ -87,7 +101,7 @@ workflow PREPARE_INPUT {
         sheetPathStr = null
     }
     def sheetPath    = sheetPathStr ? file(sheetPathStr, checkIfExists: false) : null
-    def sheetExists  = sheetPath?.exists()
+    def sheetExists  = sheetPath?.exists() && params.containsKey('samplesheet')
 
     def rowToTuple = { row ->
         def sampleId    = row.id?.trim()
