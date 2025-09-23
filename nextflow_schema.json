@@ -63,8 +63,7 @@
             "pattern": "^https?://.+$",
             "errorMessage": "Provide valid http(s) HTSGET URLs."
           },
-          "help_text": "Advanced option: supply multiple HTSGET URLs (via CLI or JSON input).",
-          "hidden": true
+          "help_text": "Advanced option: supply multiple HTSGET URLs (via CLI or JSON input)."
         },
         "htsget_filetype": {
           "type": "string",
