@@ -1,10 +1,14 @@
 nextflow.enable.dsl=2
 
 // Default parameters
-params.outdir           = params.outdir ?: 'results'
+def resolvedOutdir = params.outdir?.toString()?.trim()
+if (!resolvedOutdir) {
+    log.error "Parameter --outdir is required."
+    System.exit(1)
+}
+params.outdir           = resolvedOutdir
 params.publish_dir_mode = params.publish_dir_mode ?: 'copy'
 params.htsget_urls      = params.htsget_urls ?: []
-params.htsget_filetype  = params.htsget_filetype ?: 'bam'
 
 include { PREPARE_INPUT } from './subworkflows/prepare_input'
 

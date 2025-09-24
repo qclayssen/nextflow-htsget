@@ -20,8 +20,7 @@ def normaliseUrlInput(value) {
 // Subworkflow to prepare input channel from samplesheet or direct URL list
 workflow PREPARE_INPUT {
     main:
-    params.outdir        = params.outdir ?: 'results'
-    params.samplesheet   = params.samplesheet ?: 'samplesheet.csv'
+    // assume `params.outdir` validated at workflow entry (handled in main.nf)
 
     def FILETYPE_METADATA = [
         bam  : [extension: 'bam',  format: 'BAM'],
@@ -82,14 +81,13 @@ workflow PREPARE_INPUT {
         manualTuples << tuple(meta, meta.uri)
     }
 
-    def manualChannel = manualTuples ? Channel.of(*manualTuples) : Channel.empty()
+    def manualChannel = manualTuples ? Channel.from(manualTuples) : Channel.empty()
 
     def sheetPathStr = params.samplesheet?.toString()?.trim()
     if (sheetPathStr == '') {
         sheetPathStr = null
     }
-    def sheetPath    = sheetPathStr ? file(sheetPathStr, checkIfExists: false) : null
-    def sheetExists  = sheetPath?.exists() && params.containsKey('samplesheet')
+    def sheetProvided = sheetPathStr != null
 
     def rowToTuple = { row ->
         def sampleId    = row.id?.trim()
@@ -167,13 +165,14 @@ workflow PREPARE_INPUT {
         tuple(meta, meta.uri)
     }
 
-    if (sheetExists && !manualTuples.isEmpty()) {
+    if (sheetProvided && !manualTuples.isEmpty()) {
         log.error "Both samplesheet '${sheetPathStr}' and manual HTSGET URLs were provided. Choose only one input method."
         System.exit(1)
     }
 
     def sheetChannel = Channel.empty()
-    if (sheetExists) {
+    if (sheetProvided) {
+        def sheetPath = file(sheetPathStr, checkIfExists: false)
         def delimiter = sheetPathStr.toLowerCase().endsWith('.tsv') ? "\t" : ','
         sheetChannel = Channel
             .fromPath(sheetPath)
@@ -181,12 +180,12 @@ workflow PREPARE_INPUT {
             .map(rowToTuple)
     }
 
-    if (!sheetExists && manualTuples.isEmpty()) {
+    if (!sheetProvided && manualTuples.isEmpty()) {
         log.error "No records to process: provide a samplesheet or at least one manual HTSGET URL."
         System.exit(1)
     }
 
-    ch_meta_uri = sheetExists ? sheetChannel : manualChannel
+    ch_meta_uri = sheetProvided ? sheetChannel : manualChannel
 
     emit:
     ch_meta_uri

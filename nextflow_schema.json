@@ -13,7 +13,6 @@
         "samplesheet": {
           "type": "string",
           "description": "Samplesheet of records to fetch (CSV/TSV) — select a Seqera dataset or provide a path.",
-          "default": "samplesheet.csv",
           "format": "file-path",
           "schema": "assets/schema_samplesheet.json",
           "mimetype": "text/csv",
@@ -58,12 +57,11 @@
           "default": "",
           "pattern": "^$|.*\\S.*",
           "help_text": "Enter one or more HTSGET URLs separated by commas or newlines. Leave blank to rely on the samplesheet.",
-          "placeholder": "https://…/reads/sample1, https://…/reads/sample2"
+          "placeholder": "https://.../reads/sample1, https://.../reads/sample2"
         },
         "htsget_filetype": {
           "type": "string",
           "description": "Filetype to assign to the direct HTSGET URLs (controls downstream QC steps).",
-          "default": "bam",
           "enum": [
             "bam",
             "fastq",
@@ -81,6 +79,19 @@
     },
     {
       "$ref": "#/definitions/manual_url_options"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "outdir": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        }
+      },
+      "required": [
+        "outdir"
+      ]
     },
     {
       "not": {

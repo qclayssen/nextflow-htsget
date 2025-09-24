@@ -5,10 +5,10 @@ Minimal Nextflow workflow that fetches GA4GH HTSGET reads with the bundled Pytho
 ## Quick start
 
 ```bash
-nextflow run . --outdir results
+nextflow run . --outdir results --samplesheet samplesheet.csv
 ```
 
-Inputs default to `samplesheet.csv`; override with `--samplesheet your-sheet.csv` or select a Seqera dataset (registered as `text/csv`). Use either a samplesheet or manual URLs, but not both.
+Provide either a samplesheet (for example the bundled `samplesheet.csv`) or one or more manual HTSGET URLs—never both at the same time.
 
 ## Samplesheet format
 
