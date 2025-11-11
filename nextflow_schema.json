@@ -12,11 +12,11 @@
       "properties": {
         "samplesheet": {
           "type": "string",
-          "description": "Samplesheet of records to fetch (CSV/TSV) — select a Seqera dataset or provide a path.",
+          "description": "Samplesheet of records to fetch (TSV) — select a Seqera dataset or provide a path.",
           "format": "file-path",
           "schema": "assets/schema_samplesheet.json",
-          "mimetype": "text/csv",
-          "pattern": "^(?:|\\S+\\.(csv|tsv))$",
+          "mimetype": "text/tab-separated-values",
+          "pattern": "^(?:|\\S+\\.tsv)$",
           "help_text": "Pick a workspace dataset (text/csv) or path to a CSV/TSV containing id,name,filetype,uri columns. Leave blank when using manual URLs.",
           "errorMessage": "Supply a CSV/TSV path without spaces ending in .csv or .tsv, or leave the field blank when using manual URLs."
         },
