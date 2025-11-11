@@ -1,0 +1,18 @@
+CASEID	PATIENTID	SPECIMENID	OBJECTSIZE	OBJECTSTOREPROTOCOL	OBJECTSTOREBUCKET	OBJECTSTOREKEY	OBJECTSTORENAME	OBJECTSTORESIGNED	OBJECTSTOREURL	OBJECTTYPE	MD5
+	Y	NA12892	0	s3	umccr-googlebrain-data-dev	NA12892.novaseq.wes_idt.50x.deepvariant-v1.0.grch38.vcf.gz	NA12892.novaseq.wes_idt.50x.deepvariant-v1.0.grch38.vcf.gz		htsget://htsget.dev.umccr.org/variants/NA12892	VCF	TODO
+	Y	NA12892	0	s3	umccr-googlebrain-data-dev	NA12892.novaseq.wes_idt.50x.dedup.bam	NA12892.novaseq.wes_idt.50x.dedup.bam		htsget://htsget.dev.umccr.org/reads/NA12892	BAM	TODO
+	X	NA12891	0	s3	umccr-googlebrain-data-dev	NA12891.novaseq.wes_idt.50x.deepvariant-v1.0.grch38.vcf.gz	NA12891.novaseq.wes_idt.50x.deepvariant-v1.0.grch38.vcf.gz		htsget://htsget.dev.umccr.org/variants/NA12891	VCF	TODO
+	X	NA12891	0	s3	umccr-googlebrain-data-dev	NA12891.novaseq.wes_idt.50x.dedup.bam	NA12891.novaseq.wes_idt.50x.dedup.bam		htsget://htsget.dev.umccr.org/reads/NA12891	BAM	TODO
+FAMILY-AB	B	HG007	0	s3	umccr-googlebrain-data-dev	HG007.novaseq.wes_idt.50x.deepvariant-v1.0.grch38.vcf.gz	HG007.novaseq.wes_idt.50x.deepvariant-v1.0.grch38.vcf.gz		htsget://htsget.dev.umccr.org/variants/HG007	VCF	TODO
+FAMILY-AB	B	HG007	0	s3	umccr-googlebrain-data-dev	HG007.novaseq.wes_idt.50x.dedup.bam	HG007.novaseq.wes_idt.50x.dedup.bam		htsget://htsget.dev.umccr.org/reads/HG007	BAM	TODO
+FAMILY-AB	A	HG006	0	s3	umccr-googlebrain-data-dev	HG006.novaseq.wes_idt.50x.deepvariant-v1.0.grch38.vcf.gz	HG006.novaseq.wes_idt.50x.deepvariant-v1.0.grch38.vcf.gz		htsget://htsget.dev.umccr.org/variants/HG006	VCF	TODO
+FAMILY-AB	A	HG006	0	s3	umccr-googlebrain-data-dev	HG006.novaseq.wes_idt.50x.dedup.bam	HG006.novaseq.wes_idt.50x.dedup.bam		htsget://htsget.dev.umccr.org/reads/HG006	BAM	TODO
+	AGENT-66	HG005	3237104	s3	umccr-googlebrain-data-dev	HG005.novaseq.wes_idt.50x.deepvariant-v1.0.grch38.vcf.gz	HG005.novaseq.wes_idt.50x.deepvariant-v1.0.grch38.vcf.gz		htsget://htsget.dev.umccr.org/variants/HG005	VCF	TODO
+	AGENT-66	HG005	1891267048	s3	umccr-googlebrain-data-dev	HG005.novaseq.wes_idt.50x.dedup.bam	HG005.novaseq.wes_idt.50x.dedup.bam		htsget://htsget.dev.umccr.org/reads/HG005	BAM	TODO
+	AGENT-44	HG004	3306404	s3	umccr-googlebrain-data-dev	HG004.novaseq.wes_idt.50x.deepvariant-v1.0.grch38.vcf.gz	HG004.novaseq.wes_idt.50x.deepvariant-v1.0.grch38.vcf.gz		htsget://htsget.dev.umccr.org/variants/HG004	VCF	TODO
+	AGENT-44	HG004	1916923687	s3	umccr-googlebrain-data-dev	HG004.novaseq.wes_idt.50x.dedup.bam	HG004.novaseq.wes_idt.50x.dedup.bam		htsget://htsget.dev.umccr.org/reads/HG004	BAM	TODO
+FAMILY-SMART	AGENT-K13	HG003	3276917	s3	umccr-googlebrain-data-dev	HG003.novaseq.wes_idt.50x.deepvariant-v1.0.grch38.vcf.gz	HG003.novaseq.wes_idt.50x.deepvariant-v1.0.grch38.vcf.gz		htsget://htsget.dev.umccr.org/variants/HG003	VCF	TODO
+FAMILY-SMART	AGENT-K13	HG003	1940463353	s3	umccr-googlebrain-data-dev	HG003.novaseq.wes_idt.50x.dedup.bam	HG003.novaseq.wes_idt.50x.dedup.bam		htsget://htsget.dev.umccr.org/reads/HG003	BAM	TODO
+FAMILY-SMART	AGENT-99	HG002	3251432	s3	umccr-googlebrain-data-dev	HG002.novaseq.wes_idt.50x.deepvariant-v1.0.grch38.vcf.gz	HG002.novaseq.wes_idt.50x.deepvariant-v1.0.grch38.vcf.gz		htsget://htsget.dev.umccr.org/variants/HG002	VCF	88bc6ee8de4a1ce0d231396187bc8bf4
+FAMILY-SMART	AGENT-99	HG002	1949391484	s3	umccr-googlebrain-data-dev	HG002.novaseq.wes_idt.50x.dedup.bam	HG002.novaseq.wes_idt.50x.dedup.bam		htsget://htsget.dev.umccr.org/reads/HG002	BAM	TODO
+FAMILY-SMART	AGENT-86	HG001	3260778	s3	umccr-googlebrain-data-dev	HG001.novaseq.wes_idt.50x.deepvariant-v1.0.grch38.vcf.gz	HG001.novaseq.wes_idt.50x.deepvariant-v1.0.grch38.vcf.gz		htsget://htsget.dev.umccr.org/variants/HG001	VCF	28b2cf3440478037b4b12635905107f6
