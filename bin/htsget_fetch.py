@@ -44,7 +44,7 @@ def main() -> int:
         url = url.replace("htsget://", "https://", 1)
 
     with open(args.output, "wb") as handle:
-        htsget.get(args.url, handle, **params)
+        htsget.get(url, handle, **params)
 
     return 0
 
