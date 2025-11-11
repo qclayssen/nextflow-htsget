@@ -93,7 +93,8 @@ workflow PREPARE_INPUT {
         def caseId    = row.CASEID?.trim()
         def patientId  = row.PATIENTID?.trim()
         def specimenId  = row.SPECIMENID?.trim()
-        def sampleLabel = caseId + "_" + patientId + "_" + specimenId
+        def objectType  = row.OBJECTTYPE?.trim()
+        def sampleLabel = "ID" + caseId + "_" + patientId + "_" + specimenId + "_" + objectType
         if (!sampleLabel) {
             log.error "Row is missing a unique identifier (must have at least one of CASEID, PATIENTID, SPECIMENID)."
             System.exit(1)
