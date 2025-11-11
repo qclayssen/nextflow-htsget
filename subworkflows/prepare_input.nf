@@ -90,21 +90,22 @@ workflow PREPARE_INPUT {
     def sheetProvided = sheetPathStr != null
 
     def rowToTuple = { row ->
-        def sampleId    = row.id?.trim()
-        def sampleName  = row.name?.trim()
-        def sampleLabel = sampleId ?: sampleName
+        def caseId    = row.CASEID?.trim()
+        def patientId  = row.PATIENTID?.trim()
+        def specimenId  = row.SPECIMENID?.trim()
+        def sampleLabel = caseId + "_" + patientId + "_" + specimenId
         if (!sampleLabel) {
-            log.error "Row is missing a sample identifier (name or id)."
+            log.error "Row is missing a unique identifier (must have at least one of CASEID, PATIENTID, SPECIMENID)."
             System.exit(1)
         }
 
-        def uri = row.uri?.trim()
+        def uri = row.OBJECTSTOREURL?.trim()
         if (!uri) {
-            log.error "Row for '${sampleLabel}' is missing a uri"
+            log.error "Row for '${sampleLabel}' is missing a OBJECTSTOREURL"
             System.exit(1)
         }
 
-        def filetype = row.filetype?.trim()?.toLowerCase()
+        def filetype = row.OBJECTTYPE?.trim()?.toLowerCase()
         if (!filetype || !FILETYPE_METADATA.containsKey(filetype)) {
             log.error "Row for '${sampleLabel}' has unsupported filetype '${row.filetype}'. Supported: ${FILETYPE_METADATA.keySet().join(', ')}"
             System.exit(1)
@@ -153,8 +154,8 @@ workflow PREPARE_INPUT {
 
         def meta = [
             id             : sampleLabel,
-            sample_id      : sampleId ?: sampleLabel,
-            sample_name    : sampleName ?: sampleLabel,
+            sample_id      : specimenId ?: sampleLabel,
+            sample_name    : specimenId ?: sampleLabel,
             filetype       : filetype,
             uri            : uri,
             reference_name : referenceName,
