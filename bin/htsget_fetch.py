@@ -40,7 +40,7 @@ def main() -> int:
     url = args.url
 
     # support htsget URI format by converting it to URI format expected by downloader
-    if url.starts_with("htsget://"):
+    if url.startswith("htsget://"):
         url = url.replace("htsget://", "https://", 1)
 
     with open(args.output, "wb") as handle:
