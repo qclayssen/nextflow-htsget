@@ -100,7 +100,7 @@ workflow PREPARE_INPUT {
             System.exit(1)
         }
 
-        def uri = row.OBJECTSTOREURL?.trim().replaceFirst(/htsget\:/, "https:")
+        def uri = row.OBJECTSTOREURL?.trim().replaceFirst(/htsget:/, "https:")
         if (!uri) {
             log.error "Row for '${sampleLabel}' is missing a OBJECTSTOREURL"
             System.exit(1)
