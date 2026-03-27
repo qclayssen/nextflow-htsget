@@ -7,24 +7,28 @@
   "items": {
     "type": "object",
     "properties": {
-      "id": {
+      "CASEID": {
         "type": "string",
-        "minLength": 1,
-        "description": "Unique identifier for the sample entry",
-        "meta": ["id"]
+        "description": "Identifier for the case",
+        "meta": ["CASEID"]
       },
-      "name": {
+      "PATIENTID": {
         "type": "string",
-        "description": "Optional label for logging",
-        "meta": ["name"]
+        "description": "Identifier for the patient",
+        "meta": ["PATIENTID"]
       },
-      "filetype": {
+      "SPECIMENID": {
         "type": "string",
-        "enum": ["bam", "fastq", "vcf"],
+        "description": "Identifier for the specimen",
+        "meta": ["SPECIMENID"]
+      },
+      "OBJECTTYPE": {
+        "type": "string",
+        "enum": ["BAM", "FASTQ", "VCF"],
         "description": "Download format to request (bam, fastq, or vcf)",
         "errorMessage": "filetype must be one of bam, fastq, or vcf"
       },
-      "uri": {
+      "OBJECTSTOREURL": {
         "type": "string",
         "minLength": 1,
         "description": "HTSGET endpoint to fetch"
@@ -46,7 +50,7 @@
         "description": "End position (0-based exclusive)"
       }
     },
-    "required": ["uri"],
+    "required": ["OBJECTSTOREURL"],
     "additionalProperties": true
   }
 }

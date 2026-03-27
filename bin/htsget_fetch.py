@@ -37,8 +37,14 @@ def main() -> int:
     if args.end is not None:
         params["end"] = args.end
 
+    url = args.url
+
+    # support htsget URI format by converting it to URI format expected by downloader
+    if url.startswith("htsget://"):
+        url = url.replace("htsget://", "https://", 1)
+
     with open(args.output, "wb") as handle:
-        htsget.get(args.url, handle, **params)
+        htsget.get(url, handle, **params)
 
     return 0
 
